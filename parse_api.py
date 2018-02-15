@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import httplib2
 import Queue
 from worker_api import Worker 
+import collections
 
 class ParseAPI: 
     def __init__(self, target, consumes=5):
@@ -45,11 +46,13 @@ class ParseAPI:
 
 
 if __name__ == "__main__": 
-    sheet = pyxl.get_sheet(file_name="GPCR set with plate scores.xlsx")
-    sheet.name_columns_by_row(0)
+    book = pyxl.get_book(file_name="GPCR set with plate scores.xlsx")
+    sheet = book.IRBF
+    sheet.name_columns_by_row(1)
     parser = ParseAPI(target=sheet.column['GB ACCNUM'])
     parser.wrapper() 
-    genes = parser.flatten() 
-    sheet.column['Gene Name'] = [x for x in genes]
+    genes = parser.flatten()
+    descriptive = ["Gene Name"] + genes
+    sheet.column += collections.OrderedDict(enumerate(descriptive, 0)) 
     sheet.save_as("GPCR set with plate scores - Updated.xlsx")
 
