@@ -6,11 +6,17 @@ from worker_api import Worker
 import collections
 
 class ParseAPI: 
-    def __init__(self, target, consumes=5):
+    def __init__(self, target=None, consumes=5):
     	self.URL = "https://www.ncbi.nlm.nih.gov/nucest/"
     	self.target = target
     	self.consumes = consumes
     	self.queue = Queue.PriorityQueue(len(self.target))
+
+    def load_target(self, target): 
+        self.target = target 
+
+    def load_consumes(self, consumes):
+        self.consumes = consumes 
 
     @staticmethod
     def _retrieve_from_url(url):
